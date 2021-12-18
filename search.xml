@@ -1,3 +1,117 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
+  <entry>
+    <title>搭建hexo+github博客</title>
+    <url>/2021/12/18/%E6%90%AD%E5%BB%BAhexo-github%E5%8D%9A%E5%AE%A2/</url>
+    <content><![CDATA[<h3 id="搭建hexo-github博客"><a href="#搭建hexo-github博客" class="headerlink" title="搭建hexo+github博客"></a>搭建hexo+github博客</h3><blockquote>
+<ol>
+<li>使用hexo环境准备：node和git</li>
+<li>配置GitHub并安装hexo [两者不分先后]</li>
+<li>写一篇博客并上传</li>
+<li>之前遇到的问题汇总[根据实际情况进行更新]</li>
+</ol>
+</blockquote>
+<span id="more"></span>
+
+<h3 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h3><p>鉴于我本人只是个小白，写博客是用来记录自己这来之不易的成果、整理自己学到的东西，同时方便我后续再次搭建，希望看的人也能有所收获。如有问题，欢迎指正！OvO</p>
+<h3 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h3><h4 id="node安装"><a href="#node安装" class="headerlink" title="node安装"></a>node安装</h4><p><a href="https://nodejs.org/en/download/">Node.js官网下载</a>，可以按照你的实际需求进行选择，这里推荐下载LTS版本，current版本可能无法安装一些插件</p>
+<p><em>安装时可以选择傻瓜式安装，一直默认下一步（大概是倒数第二步有一个“添加到环境路径”的选项，可以选择|有的人出现的报错可能是因为环境变量没有处理对，所以这里直接勾选它可能会省去一些麻烦）</em></p>
+<p>安装完后，<code>win+R</code>，敲入<code>cmd</code>打开命令行，分别输入<code>node  -v</code>和<code>npm -v</code>进行检查，如果成功，会显示版本号。大概是图片里的那样：</p>
+<p><img src="D:/hexo-blog/biersaa/source/_posts/搭建hexo-github博客/version.png" loading="lazy"></p>
+<p><em>npm是<strong>包管理器</strong>，我们可以通过它来安装一些插件什么的</em></p>
+<h5 id="添加镜像"><a href="#添加镜像" class="headerlink" title="添加镜像"></a>添加镜像</h5><p>没有梯子的话，加载速度较慢，我们可以在命令行中敲下</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">npm config set registry https://registry.npm.taobao.org</span><br></pre></td></tr></table></figure>
+
+<p>设置成淘宝的镜像源</p>
+<h4 id="git安装"><a href="#git安装" class="headerlink" title="git安装"></a>git安装</h4><blockquote>
+<p>它是一个控制工具，能将本地网页文件上传到GitHub</p>
+<p>你如果对它各种操作细节感兴趣，能在廖雪峰老师的网站中，找到相关教程：<a href="https://www.liaoxuefeng.com/wiki/896043488029600">廖老师的git教程</a></p>
+</blockquote>
+<p>我们从<a href="https://git-scm.com/download/win">git官网</a>按需下载git，完成后，还是那一套：<code>win+R</code>，敲入<code>cmd</code>，回车（打开命令行），通过<code>git version</code>进行检查，出现版本号代表我们安装成功</p>
+<p><img src="D:/hexo-blog/biersaa/source/_posts/搭建hexo-github博客/git.png" loading="lazy"></p>
+<h3 id="配置GitHub"><a href="#配置GitHub" class="headerlink" title="配置GitHub"></a>配置GitHub</h3><blockquote>
+<p>如果没有GitHub账号，就注册一个<em>（你注册用的账户名后面会用到，推荐慎重考虑）</em></p>
+</blockquote>
+<h4 id="准备一个仓库"><a href="#准备一个仓库" class="headerlink" title="准备一个仓库"></a>准备一个仓库</h4><p>新建一个仓库（在右上角的个人账号旁边，有个加号）</p>
+<p><img src="D:/hexo-blog/biersaa/source/_posts/搭建hexo-github博客/新建博客.png" loading="lazy"></p>
+<p>由此我们将会加载出下面这个页面：</p>
+<p><img src="D:/hexo-blog/biersaa/source/_posts/搭建hexo-github博客/仓库.png" loading="lazy"></p>
+<ol>
+<li>为仓库命名，命名格式为：用户名.github.io（<strong>注意，用户名就是你账户的注册名，必须相同</strong>），比如我的注册名为Biersaa，那么我的仓库名应为<code>Biersaa.github.io</code></li>
+<li>勾选public（使我们的博客能被其他人看见）</li>
+<li>最好勾选<code>Add a README file</code>，一是不同意在后续操作报错，二是我们直接创建了一个<code>README</code>文件，可以写上对仓库的描述给自己和浏览你仓库的人予以相关提示（它使用markdown语法）</li>
+<li>创建仓库</li>
+</ol>
+<h4 id="生成ssh-key"><a href="#生成ssh-key" class="headerlink" title="生成ssh key"></a>生成ssh key</h4><blockquote>
+<p>ssh key指一种密钥，方便在你向仓库中提交代码、文件时判断提交的那台计算机是否属于账号本人的</p>
+</blockquote>
+<p>打开命令行（相信这个操作你已经很熟练了：<code>win+R</code>,<code>cmd</code>），敲入</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ssh-keygen -t rsa -C &quot; &quot;</span><br></pre></td></tr></table></figure>
+
+<p><em>双引号内写上你的邮箱</em></p>
+<p>然后会在c盘中，你的用户账号下生成一个.ssh文件夹，请找到名为<code>id_rsa.pub</code>的文件，复制里面的所有内容，我们下面要用到</p>
+<p>回到GitHub，还是在右上角，我们进入个人账户的设置</p>
+<p><img src="D:/hexo-blog/biersaa/source/_posts/搭建hexo-github博客/设置.png" loading="lazy"></p>
+<p>在设置中找到管理ssh的页面（在settings中找到下面图片上的那个按键并点开）</p>
+<p><img src="D:\hexo-blog\biersaa\source/_posts/搭建hexo-github博客/打开.png" loading="lazy"></p>
+<p>创建一个ssh密钥</p>
+<p><img src="D:/hexo-blog/biersaa/source/_posts/搭建hexo-github博客/创建.png" loading="lazy"></p>
+<p><img src="D:/hexo-blog/biersaa/source/_posts/搭建hexo-github博客/新密钥.png" alt="出现页面" loading="lazy"></p>
+<p>Title随便命名，你看着习惯就行；将我们刚刚从<code>id_rsa.pub</code>中复制的内容贴到Key里面，然后<code>Add SSH key</code>（添加一个新密钥）</p>
+<h4 id="安装Hexo"><a href="#安装Hexo" class="headerlink" title="安装Hexo"></a>安装Hexo</h4><p>在命令行中敲（全局安装hexo）</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">npm install -g hexo-cli</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>安装完后还是老一套，可以用<code>hexo version</code>来检查是否安装成功<em>（出现版本号即为成功）</em></li>
+</ul>
+<p>我们准备一个文件夹，在文件夹中右键，点击出现的<code>git bash here</code></p>
+<p><img src="D:/hexo-blog/biersaa/source/_posts/搭建hexo-github博客/image-20211218210426001(1).png" loading="lazy"></p>
+<p>在出现的窗口中敲下</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">hexo init blog</span><br></pre></td></tr></table></figure>
+
+<p><em>你或许想把这里的 blog换成你喜欢的名字，请随意</em></p>
+<p>这代表着新建一个名叫blog的文件夹并用hexo初始化它（hexo会在里面直接生成一些你的博客需要用到的文件）</p>
+<p>接下来在里面敲<code>npm install hexo-deployer-git --save</code>，安装部署插件（使你之后编写的博文能够上传）</p>
+<p>分别敲下<code>git config --global user.name &quot;小明&quot;</code>和<code>git config --global user.email &quot;123@bala.com&quot;</code>，用于GitHub判断进行上传操作的是不是你本人（这里的小明是你的用户名，<a href="mailto:&#x31;&#50;&#51;&#x40;&#x62;&#97;&#108;&#x61;&#46;&#99;&#111;&#109;">&#x31;&#50;&#51;&#x40;&#x62;&#97;&#108;&#x61;&#46;&#99;&#111;&#109;</a>是你的邮箱；它们可以不是github的用户名和邮箱）</p>
+<blockquote>
+<p>这里我曾采用过另一种方式，你如果好奇可以通过搜索引擎了解（不过我觉得没有这种好用）</p>
+</blockquote>
+<p>我们现在可以通过git bash，敲入<code>hexo s</code>在本地进行预览</p>
+<p><img src="D:/hexo-blog/biersaa/source/_posts/搭建hexo-github博客/预览.png" loading="lazy"></p>
+<p>在浏览器上访问<a href="http://localhost:4000/">http://localhost:4000</a> ，就能看到生成的博客页面，在git bash中按<code>ctrl+C</code>则停止服务</p>
+<blockquote>
+<p>以后我们对配置进行修改之前可以优先<code>hexo s</code>，避免将崩坏的页面上传</p>
+</blockquote>
+<p>我们从博客文件夹的根目录下，右键打开git bash，依次执行下面三行命令（分别代表：清除缓存、生成页面、上传页面）</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">hexo clean</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">hexo g</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">hexo d</span><br></pre></td></tr></table></figure>
+
+<p>之后别人就可以直接从<code>https://用户名.github.io</code>访问到你的博客了，比如，你可以通过在浏览器中键入<a href="https://biersaa.github.io/">https://biersaa.github.io/</a> 来访问我的博客（我的博客对应的GitHub仓库名字其实为Biersaa，但链接就直接将大写转小写了）</p>
+<h3 id="写一篇自己的博客"><a href="#写一篇自己的博客" class="headerlink" title="写一篇自己的博客"></a>写一篇自己的博客</h3><blockquote>
+<p>这部分你可以从<a href="https://hexo.io/zh-cn/docs/writing">官方文档</a>上详细了解</p>
+</blockquote>
+<p>在git bash中敲<code>hexo n &quot;文章的标题&quot;</code>，就能新建一篇文章（符合markdown语法）</p>
+<p>接下来</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">hexo clean</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">hexo g</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">hexo d</span><br></pre></td></tr></table></figure>
+
+<p>即可使这篇文章上传到你的博客</p>
+<h4 id="我遇到的问题"><a href="#我遇到的问题" class="headerlink" title="我遇到的问题"></a>我遇到的问题</h4><blockquote>
+<p>我第一遍搭的时候真的报错报到怀疑人生，做梦都是满满的报错飞到我脸上（太离谱了），可惜我没有进行记录</p>
+</blockquote>
+<h5 id="已经有了一个hexo博客想要再搭第二个？"><a href="#已经有了一个hexo博客想要再搭第二个？" class="headerlink" title="已经有了一个hexo博客想要再搭第二个？"></a>已经有了一个hexo博客想要再搭第二个？</h5><p><a href="https://blog.csdn.net/qq_36759224/article/details/86546729">推荐链接</a></p>
+]]></content>
+      <categories>
+        <category>杂七杂八</category>
+      </categories>
+      <tags>
+        <tag>博客</tag>
+      </tags>
+  </entry>
 </search>
