@@ -17,7 +17,7 @@
 <h3 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h3><h4 id="node安装"><a href="#node安装" class="headerlink" title="node安装"></a>node安装</h4><p><a href="https://nodejs.org/en/download/">Node.js官网下载</a>，可以按照你的实际需求进行选择，这里推荐下载LTS版本，current版本可能无法安装一些插件</p>
 <p><em>安装时可以选择傻瓜式安装，一直默认下一步（大概是倒数第二步有一个“添加到环境路径”的选项，可以选择|有的人出现的报错可能是因为环境变量没有处理对，所以这里直接勾选它可能会省去一些麻烦）</em></p>
 <p>安装完后，<code>win+R</code>，敲入<code>cmd</code>打开命令行，分别输入<code>node  -v</code>和<code>npm -v</code>进行检查，如果成功，会显示版本号。大概是图片里的那样：</p>
-<p><img src="/images/%E6%90%AD%E5%BB%BAhexo-github%E5%8D%9A%E5%AE%A2/version.png" loading="lazy"></p>
+<p><img src="/2021/12/18/%E6%90%AD%E5%BB%BAhexo-github%E5%8D%9A%E5%AE%A2/version.png" loading="lazy"></p>
 <p><em>npm是<strong>包管理器</strong>，我们可以通过它来安装一些插件什么的</em></p>
 <h5 id="添加镜像"><a href="#添加镜像" class="headerlink" title="添加镜像"></a>添加镜像</h5><p>没有梯子的话，加载速度较慢，我们可以在命令行中敲下</p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">npm config set registry https://registry.npm.taobao.org</span><br></pre></td></tr></table></figure>
@@ -28,14 +28,14 @@
 <p>你如果对它各种操作细节感兴趣，能在廖雪峰老师的网站中，找到相关教程：<a href="https://www.liaoxuefeng.com/wiki/896043488029600">廖老师的git教程</a></p>
 </blockquote>
 <p>我们从<a href="https://git-scm.com/download/win">git官网</a>按需下载git，完成后，还是那一套：<code>win+R</code>，敲入<code>cmd</code>，回车（打开命令行），通过<code>git version</code>进行检查，出现版本号代表我们安装成功</p>
-<p><img src="/images/%E6%90%AD%E5%BB%BAhexo-github%E5%8D%9A%E5%AE%A2/git.png" loading="lazy"></p>
+<p><img src="/2021/12/18/%E6%90%AD%E5%BB%BAhexo-github%E5%8D%9A%E5%AE%A2/git.png" loading="lazy"></p>
 <h3 id="配置GitHub"><a href="#配置GitHub" class="headerlink" title="配置GitHub"></a>配置GitHub</h3><blockquote>
 <p>如果没有GitHub账号，就注册一个<em>（你注册用的账户名后面会用到，推荐慎重考虑）</em></p>
 </blockquote>
 <h4 id="准备一个仓库"><a href="#准备一个仓库" class="headerlink" title="准备一个仓库"></a>准备一个仓库</h4><p>新建一个仓库（在右上角的个人账号旁边，有个加号）</p>
-<p><img src="/images/%E6%90%AD%E5%BB%BAhexo-github%E5%8D%9A%E5%AE%A2/%E6%96%B0%E5%BB%BA%E5%8D%9A%E5%AE%A2.png" loading="lazy"></p>
+<p><img src="/2021/12/18/%E6%90%AD%E5%BB%BAhexo-github%E5%8D%9A%E5%AE%A2/version.png" loading="lazy"></p>
 <p>由此我们将会加载出下面这个页面：</p>
-<p><img src="/images/%E6%90%AD%E5%BB%BAhexo-github%E5%8D%9A%E5%AE%A2/%E4%BB%93%E5%BA%93.png" loading="lazy"></p>
+<p><img src="/2021/12/18/%E6%90%AD%E5%BB%BAhexo-github%E5%8D%9A%E5%AE%A2/%E4%BB%93%E5%BA%93.png" loading="lazy"></p>
 <ol>
 <li>为仓库命名，命名格式为：用户名.github.io（<strong>注意，用户名就是你账户的注册名，必须相同</strong>），比如我的注册名为Biersaa，那么我的仓库名应为<code>Biersaa.github.io</code></li>
 <li>勾选public（使我们的博客能被其他人看见）</li>
@@ -51,12 +51,12 @@
 <p><em>双引号内写上你的邮箱</em></p>
 <p>然后会在c盘中，你的用户账号下生成一个.ssh文件夹，请找到名为<code>id_rsa.pub</code>的文件，复制里面的所有内容，我们下面要用到</p>
 <p>回到GitHub，还是在右上角，我们进入个人账户的设置</p>
-<p><img src="/images/%E6%90%AD%E5%BB%BAhexo-github%E5%8D%9A%E5%AE%A2/%E8%AE%BE%E7%BD%AE.png" loading="lazy"></p>
+<p><img src="/2021/12/18/%E6%90%AD%E5%BB%BAhexo-github%E5%8D%9A%E5%AE%A2/%E8%AE%BE%E7%BD%AE.png" loading="lazy"></p>
 <p>在设置中找到管理ssh的页面（在settings中找到下面图片上的那个按键并点开）</p>
-<p><img src="/images/%E6%90%AD%E5%BB%BAhexo-github%E5%8D%9A%E5%AE%A2/%E6%89%93%E5%BC%80.png" loading="lazy"></p>
+<p><img src="/2021/12/18/%E6%90%AD%E5%BB%BAhexo-github%E5%8D%9A%E5%AE%A2/%E6%89%93%E5%BC%80.png" loading="lazy"></p>
 <p>创建一个ssh密钥</p>
-<p><img src="/images/%E6%90%AD%E5%BB%BAhexo-github%E5%8D%9A%E5%AE%A2/%E5%88%9B%E5%BB%BA.png" loading="lazy"></p>
-<p><img src="/images/%E6%90%AD%E5%BB%BAhexo-github%E5%8D%9A%E5%AE%A2/%E6%96%B0%E5%AF%86%E9%92%A5.png" alt="出现页面" loading="lazy"></p>
+<p><img src="/2021/12/18/%E6%90%AD%E5%BB%BAhexo-github%E5%8D%9A%E5%AE%A2/%E5%88%9B%E5%BB%BA.png" loading="lazy"></p>
+<p><img src="/2021/12/18/%E6%90%AD%E5%BB%BAhexo-github%E5%8D%9A%E5%AE%A2/%E6%96%B0%E5%AF%86%E9%92%A5.png" alt="出现页面" loading="lazy"></p>
 <p>Title随便命名，你看着习惯就行；将我们刚刚从<code>id_rsa.pub</code>中复制的内容贴到Key里面，然后<code>Add SSH key</code>（添加一个新密钥）</p>
 <h4 id="安装Hexo"><a href="#安装Hexo" class="headerlink" title="安装Hexo"></a>安装Hexo</h4><p>在命令行中敲（全局安装hexo）</p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">npm install -g hexo-cli</span><br></pre></td></tr></table></figure>
@@ -65,19 +65,19 @@
 <li>安装完后还是老一套，可以用<code>hexo version</code>来检查是否安装成功<em>（出现版本号即为成功）</em></li>
 </ul>
 <p>我们准备一个文件夹，在文件夹中右键，点击出现的<code>git bash here</code></p>
-<p><img src="/images/%E6%90%AD%E5%BB%BAhexo-github%E5%8D%9A%E5%AE%A2/image-20211218210426001(1).png" loading="lazy"></p>
+<p><img src="/2021/12/18/%E6%90%AD%E5%BB%BAhexo-github%E5%8D%9A%E5%AE%A2/image-20211218210426001(1).png" loading="lazy"></p>
 <p>在出现的窗口中敲下</p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">hexo init blog</span><br></pre></td></tr></table></figure>
 
 <p><em>你或许想把这里的 blog换成你喜欢的名字，请随意</em></p>
 <p>这代表着新建一个名叫blog的文件夹并用hexo初始化它（hexo会在里面直接生成一些你的博客需要用到的文件）</p>
 <p>接下来在里面敲<code>npm install hexo-deployer-git --save</code>，安装部署插件（使你之后编写的博文能够上传）</p>
-<p>分别敲下<code>git config --global user.name &quot;小明&quot;</code>和<code>git config --global user.email &quot;123@bala.com&quot;</code>，用于GitHub判断进行上传操作的是不是你本人（这里的小明是你的用户名，<a href="mailto:&#49;&#x32;&#x33;&#64;&#98;&#x61;&#x6c;&#97;&#x2e;&#99;&#x6f;&#x6d;">&#49;&#x32;&#x33;&#64;&#98;&#x61;&#x6c;&#97;&#x2e;&#99;&#x6f;&#x6d;</a>是你的邮箱；它们可以不是github的用户名和邮箱）</p>
+<p>分别敲下<code>git config --global user.name &quot;小明&quot;</code>和<code>git config --global user.email &quot;123@bala.com&quot;</code>，用于GitHub判断进行上传操作的是不是你本人（这里的小明是你的用户名，<a href="mailto:&#x31;&#x32;&#x33;&#64;&#98;&#97;&#x6c;&#97;&#x2e;&#x63;&#111;&#x6d;">&#x31;&#x32;&#x33;&#64;&#98;&#97;&#x6c;&#97;&#x2e;&#x63;&#111;&#x6d;</a>是你的邮箱；它们可以不是github的用户名和邮箱）</p>
 <blockquote>
 <p>这里我曾采用过另一种方式，你如果好奇可以通过搜索引擎了解（不过我觉得没有这种好用）</p>
 </blockquote>
 <p>我们现在可以通过git bash，敲入<code>hexo s</code>在本地进行预览</p>
-<p><img src="/images/%E6%90%AD%E5%BB%BAhexo-github%E5%8D%9A%E5%AE%A2/%E9%A2%84%E8%A7%88.png" loading="lazy"></p>
+<p><img src="/2021/12/18/%E6%90%AD%E5%BB%BAhexo-github%E5%8D%9A%E5%AE%A2/%E9%A2%84%E8%A7%88.png" loading="lazy"></p>
 <p>在浏览器上访问<a href="http://localhost:4000/">http://localhost:4000</a> ，就能看到生成的博客页面，在git bash中按<code>ctrl+C</code>则停止服务</p>
 <blockquote>
 <p>以后我们对配置进行修改之前可以优先<code>hexo s</code>，避免将崩坏的页面上传</p>
