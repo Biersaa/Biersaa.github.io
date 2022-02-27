@@ -202,4 +202,76 @@
         <tag>博客</tag>
       </tags>
   </entry>
+  <entry>
+    <title>简单的卷积神经网络</title>
+    <url>/2022/01/27/%E7%AE%80%E5%8D%95%E7%9A%84%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/</url>
+    <content><![CDATA[<h2 id><a href="#" class="headerlink" title></a></h2>]]></content>
+      <categories>
+        <category>CNN</category>
+      </categories>
+      <tags>
+        <tag>神经网络</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>理解梯度下降中的update参数间关系</title>
+    <url>/2022/02/20/%E7%90%86%E8%A7%A3%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D%E4%B8%AD%E7%9A%84update%E5%8F%82%E6%95%B0%E9%97%B4%E5%85%B3%E7%B3%BB/</url>
+    <content><![CDATA[<h3 id="理解梯度下降中的update参数间关系"><a href="#理解梯度下降中的update参数间关系" class="headerlink" title="理解梯度下降中的update参数间关系"></a>理解梯度下降中的update参数间关系</h3><blockquote>
+<p>本文重点在参数间的意义+向量化参数的说明（防止健忘）</p>
+</blockquote>
+<p>根据吴恩达老师授课内容、参考ex1文档说明，在实现梯度下降法时，需要用到三个公式有三：</p>
+<p><img src="/2022/02/20/%E7%90%86%E8%A7%A3%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D%E4%B8%AD%E7%9A%84update%E5%8F%82%E6%95%B0%E9%97%B4%E5%85%B3%E7%B3%BB/image-20220220181105850.png" alt="image-20220220181105850" loading="lazy"></p>
+<p><img src="/2022/02/20/%E7%90%86%E8%A7%A3%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D%E4%B8%AD%E7%9A%84update%E5%8F%82%E6%95%B0%E9%97%B4%E5%85%B3%E7%B3%BB/image-20220220181119373.png" alt="image-20220220181119373" loading="lazy"></p>
+<p><img src="/2022/02/20/%E7%90%86%E8%A7%A3%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D%E4%B8%AD%E7%9A%84update%E5%8F%82%E6%95%B0%E9%97%B4%E5%85%B3%E7%B3%BB/image-20220220181140486.png" alt="image-20220220181140486" loading="lazy"></p>
+<span id="more"></span>
+
+<ul>
+<li><p>前两个公式求代价函数（不同的参数变量相较于实际函数型关系的差别数值）</p>
+</li>
+<li><p>最后一个实现θ同步更新（或者说梯度下降运算的过程）</p>
+<blockquote>
+<p>里面有两个顺序，分别是i、j：<strong>i意为样本的第几个，j是θ的第几个尝试</strong></p>
+<p>所以i的范围从1到m，j的范围从1到最后一组theta（或者你按照代码习惯，从0开始计数也没毛病）</p>
+</blockquote>
+<p><img src="/2022/02/20/%E7%90%86%E8%A7%A3%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D%E4%B8%AD%E7%9A%84update%E5%8F%82%E6%95%B0%E9%97%B4%E5%85%B3%E7%B3%BB/image-20220226212626191.png" alt="image-20220226212626191" loading="lazy"></p>
+</li>
+</ul>
+<p><em><strong>E代表 hθ(x_i)-y_i，E是epoch的缩写</strong></em></p>
+<h4 id="公式内涉及到的变量意义解读"><a href="#公式内涉及到的变量意义解读" class="headerlink" title="公式内涉及到的变量意义解读"></a>公式内涉及到的变量意义解读</h4><ul>
+<li>m训练样本数量</li>
+<li><strong>Cost Function：</strong>J(x) 是代价函数（假设与实际的偏离值构成的函数）</li>
+<li><strong>Hypothesis：</strong>h(x) 是假设函数（我们假定的符合散点图的函数）</li>
+<li><strong>Parameters：</strong>θ_0、θ_1都是模型参数（也就是一个直线函数中的截距、斜率）</li>
+<li><strong>Feature：</strong>xi、yi都是i点对应的数据值</li>
+<li><strong>Learning rate：</strong>α是学习率（每次移动步幅的大小）</li>
+</ul>
+<hr>
+<h4 id="同步更新"><a href="#同步更新" class="headerlink" title="同步更新"></a>同步更新</h4><p>最后一个公式可以写作<em>（里面的 ‘：=’ 代表赋值）</em>：</p>
+<p><img src="/2022/02/20/%E7%90%86%E8%A7%A3%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D%E4%B8%AD%E7%9A%84update%E5%8F%82%E6%95%B0%E9%97%B4%E5%85%B3%E7%B3%BB/image-20220220193216409.png" alt="image-20220220193216409" loading="lazy"></p>
+<p>这里的j意味着你在样本列表中迭代的索引（也就是可以在一个范围内进行更新）</p>
+<p>同步更新意义是控制单一变量</p>
+<ul>
+<li>这里右边的J函数意味着求 在参数分别为θ_0和θ_1时的梯度</li>
+<li>减去方向为沿斜坡向上的梯度（乘学习率代表步伐大小），也就是使θ向量往函数值变小的方向前进</li>
+</ul>
+<hr>
+<h4 id="踩坑"><a href="#踩坑" class="headerlink" title="踩坑"></a>踩坑</h4><p>下面都是从大佬们那里学到的代码 -&gt; <a href="https://github.com/tongfeima/MachineLearningAlgorithm/blob/main/GradingDesent/LinearRegressionTest.py">被参考的大佬</a> 、<a href="https://github.com/bisa42/Coursera-ML-AndrewNg-Notes/blob/master/code/ex1-linear%20regression/ML-Exercise1.ipynb">被参考的大佬</a></p>
+<ul>
+<li><p>初始化X矩阵时无法直接将一列1与population合并的问题</p>
+</li>
+<li><p>要注意两个矩阵的维度相同再运算（要分辨ndarray和array）</p>
+</li>
+<li><p>多维矩阵和矩阵实现切片功能所用的函数有差别</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">df = pd.read_csv(<span class="string">&#x27;ex1data1.txt&#x27;</span>, names=[<span class="string">&#x27;population&#x27;</span>, <span class="string">&#x27;profit&#x27;</span>])</span><br><span class="line"></span><br><span class="line"><span class="string">&quot;&quot;&quot;一种写法&quot;&quot;&quot;</span></span><br><span class="line">data = np.array(df)</span><br><span class="line">m = data.shape[<span class="number">0</span>]</span><br><span class="line">theta = np.array([<span class="number">0</span>,<span class="number">0</span>])<span class="comment"># 得到[0 0]，dtype = &#x27;i4&#x27;</span></span><br><span class="line"><span class="comment"># theta = np.zeros([1,2])会得到[0. 0.]，dtype = float64</span></span><br><span class="line">data = np.hstack([np.ones([m,<span class="number">1</span>]),data])</span><br><span class="line">y = data[:,<span class="number">2</span>]</span><br><span class="line">X = data[:,:<span class="number">2</span>]</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">cost</span>(<span class="params">X,y,theta</span>):</span></span><br><span class="line">    cost = np.<span class="built_in">sum</span>((X.dot(theta)-y) ** <span class="number">2</span>)<span class="comment"># 这里要用dot！！</span></span><br><span class="line">    <span class="keyword">return</span> cost / (<span class="number">2</span>*m)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">gradient</span>(<span class="params">X,y,theta</span>):</span></span><br><span class="line">    grad = np.empty(<span class="built_in">len</span>(theta))<span class="comment"># 初始化梯度</span></span><br><span class="line">    <span class="comment"># 计算梯度中的求和，指的是从头至特定位置的sum</span></span><br><span class="line">    inner = X.dot(theta.T) - y</span><br><span class="line">    grad = np.<span class="built_in">sum</span>(inner * X)</span><br><span class="line">    <span class="keyword">return</span> grad / m</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">update</span>(<span class="params">X,y,alpha,theta</span>):</span></span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        last_theta = theta</span><br><span class="line">        grad = gradient(X,y,theta)</span><br><span class="line">        theta = theta - alpha*grad</span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">abs</span>(cost(X,y,last_theta) - cost(X,y,theta)) &lt; <span class="number">1e-15</span>:</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">    <span class="keyword">return</span> theta</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="string">&quot;&quot;&quot;另一种写法&quot;&quot;&quot;</span></span><br><span class="line">ones = pd.DataFrame(&#123;<span class="string">&#x27;ones&#x27;</span>:np.ones(<span class="built_in">len</span>(df))&#125;)<span class="comment"># 在csv里面前面添加一列再提取列中的数据</span></span><br><span class="line">data = pd.concat([ones,df],axis=<span class="number">1</span>)</span><br><span class="line">X = data.iloc[:,:-<span class="number">1</span>].values<span class="comment"># 这人原本用的.as_matrix()</span></span><br><span class="line">y = data.iloc[:,-<span class="number">1</span>].values</span><br><span class="line">theta = np.zeros(X.shape[<span class="number">1</span>])</span><br></pre></td></tr></table></figure></li>
+<li><p><strong>一些向量化</strong>：其实前面处理数据时，用的就是矩阵（矩阵是多个向量嘛）放到θ更新上，就是理解θ的更新过程 -&gt;<a href="https://blog.csdn.net/lgb_love/article/details/81456955?utm_medium=distribute.pc_aggpage_search_result.none-task-blog-2~aggregatepage~first_rank_ecpm_v1~rank_v31_ecpm-1-81456955.pc_agg_new_rank&utm_term=%E6%A2%AF%E5%BA%A6%E6%9B%B4%E6%96%B0%E7%9A%84%E5%90%91%E9%87%8F%E5%8C%96%E4%BB%A3%E7%A0%81&spm=1000.2123.3001.4430">具体我们又能看一下别人写的</a>来梳理…</p>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>cv长路</category>
+      </categories>
+      <tags>
+        <tag>linear regression</tag>
+      </tags>
+  </entry>
 </search>
