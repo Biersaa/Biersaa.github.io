@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  
+  
+  
+  <entry>
+    <title>理解np.transpose/reshape等函数中的axis</title>
+    <link href="/2022/04/12/%E7%90%86%E8%A7%A3np-transpose-reshape%E7%AD%89%E5%87%BD%E6%95%B0%E4%B8%AD%E7%9A%84axis/"/>
+    <url>/2022/04/12/%E7%90%86%E8%A7%A3np-transpose-reshape%E7%AD%89%E5%87%BD%E6%95%B0%E4%B8%AD%E7%9A%84axis/</url>
+    
+    <content type="html"><![CDATA[<h3 id="多维数组结构"><a href="#多维数组结构" class="headerlink" title="多维数组结构"></a>多维数组结构</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np<br>arr = np.arange(<span class="hljs-number">16</span>).reshape((<span class="hljs-number">2</span>, <span class="hljs-number">2</span>, <span class="hljs-number">4</span>))<br><span class="hljs-built_in">print</span>(arr)<br><span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">[[[ 0  1  2  3]</span><br><span class="hljs-string">  [ 4  5  6  7]]</span><br><span class="hljs-string"></span><br><span class="hljs-string"> [[ 8  9 10 11]</span><br><span class="hljs-string">  [12 13 14 15]]]</span><br><span class="hljs-string"></span><br><span class="hljs-string">&quot;&quot;&quot;</span><br></code></pre></td></tr></table></figure><p><code>arr.reshape((2,2,4))</code>是把arr根据2维2行4列的结构复制到新的数组中。可以将2维理解成两张图片（进行图像处理中的图片），2行是每一张图片中的行数，4列是每一张图片上的列数。可以建立x，y，z轴观察。</p><p><img src="/2022/04/12/%E7%90%86%E8%A7%A3np-transpose-reshape%E7%AD%89%E5%87%BD%E6%95%B0%E4%B8%AD%E7%9A%84axis/image-20220412163755794.png" alt="示意图"></p><p>x轴上为列数（宽），y轴上为行数（长），z轴上为维数（高/图片张数）。</p><h3 id="axis"><a href="#axis" class="headerlink" title="axis"></a>axis</h3><blockquote><p>axis直译为轴</p></blockquote><p>axis相当于参数的<strong>索引</strong>。</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs python">arr1 = arr.transpose((<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">2</span>))<br><span class="hljs-built_in">print</span>(arr1)<br><span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">[[[ 0  1  2  3]</span><br><span class="hljs-string">  [ 8  9 10 11]]</span><br><span class="hljs-string"></span><br><span class="hljs-string"> [[ 4  5  6  7]</span><br><span class="hljs-string">  [12 13 14 15]]]</span><br><span class="hljs-string">  </span><br><span class="hljs-string">&quot;&quot;&quot;</span><br></code></pre></td></tr></table></figure><p><code>transpose((1,0,2))</code>中的<code>(1,0,2)</code>其实是<code>(axis=1,axis=0,axis=2)</code>，arr经过<code>reshape((2,2,4))</code>，使得axis=0的值为2维（高/2张图片）、axis=1的值为2行（长），axis=2的值为4列（宽）。</p><p>所以这里的<code>transpose((1,0,2))</code>相当于<code>arr.reshape((2,2,4))</code>，或者看作翻转arr的y轴（行/axis=1）和z轴（维/axis=0）。</p><h3 id="reshape"><a href="#reshape" class="headerlink" title="reshape"></a>reshape</h3><p><code>arr.reshape((8,4))</code>是对arr中的所有数字<em>（把 arr降为一维）</em>根据进行8行4列复制到一个新的数组中。</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs python">ar1 = np.array([[<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>],[<span class="hljs-number">3</span>,<span class="hljs-number">4</span>,<span class="hljs-number">5</span>]])<br>ar2 = ar1.reshape((<span class="hljs-number">3</span>,<span class="hljs-number">2</span>))<br><span class="hljs-built_in">print</span>(ar1)<br><span class="hljs-built_in">print</span>(ar2)<br><span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">ar1:</span><br><span class="hljs-string">[[1 2 3]</span><br><span class="hljs-string"> [3 4 5]]</span><br><span class="hljs-string"> </span><br><span class="hljs-string">ar2: </span><br><span class="hljs-string">[[1 2]</span><br><span class="hljs-string"> [3 3]</span><br><span class="hljs-string"> [4 5]]</span><br><span class="hljs-string"></span><br><span class="hljs-string">&quot;&quot;&quot;</span><br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>cv长路</category>
+      
+    </categories>
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>Ubuntu部署alphapose</title>
+    <link href="/2022/04/02/Ubuntu%E9%83%A8%E7%BD%B2alphapose/"/>
+    <url>/2022/04/02/Ubuntu%E9%83%A8%E7%BD%B2alphapose/</url>
+    
+    <content type="html"><![CDATA[<h3 id="环境变量设置"><a href="#环境变量设置" class="headerlink" title="环境变量设置"></a>环境变量设置</h3><blockquote><p>了解到<a href="https://www.cnblogs.com/Neddy/archive/2011/03/01/1968018.html">Linux的环境变量</a>分为三种；针对所有用户的、针对单个用户的、针对部分文件的（应该还有一种是单次链接起效的）</p></blockquote><ul><li><strong>针对部分文件的<em>（失败）</em></strong>：我的anaconda路径是/home/ubuntu/anaconda3/bin，在/home/ubuntu中使用<code>vim ~/.bashrc</code>并<code>source ~/.bashrc</code>会出现以下报错（可能和安装anaconda时我采用本地上传.sh文件到服务器上有关）</li></ul><p><img src="/2022/04/02/Ubuntu%E9%83%A8%E7%BD%B2alphapose/image-20220402152524555.png"></p><p>此时的环境变量内容如下<img src="/2022/04/02/Ubuntu%E9%83%A8%E7%BD%B2alphapose/image-20220402152541634.png" alt="image-20220402152541634"></p><ul><li><strong>针对单个用户的<em>（成功）</em></strong>：</li></ul><p>相较别的解决方式，我选择把路径添加到针对单个用户的变量下。</p><p><code>vi /home/ubuntu/.bash_profile </code>编辑当前用户的环境变量</p><p>按<code>i</code>进入编辑模式，添加上<code>export CLASSPATH=$PATH:/home/ubuntu/anaconda3/bin</code>（将anaconda这一环境变量中添加到个人用户的shell中），按<code>esc</code>保存，<code>shift+zz</code>退出编辑模式</p><p><code>source /home/ubuntu/.bash_profile</code>启用该用户的环境变量</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>报错</category>
+      
+    </categories>
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>理解梯度下降中的update参数间关系</title>
+    <link href="/2022/02/20/%E7%90%86%E8%A7%A3%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D%E4%B8%AD%E7%9A%84update%E5%8F%82%E6%95%B0%E9%97%B4%E5%85%B3%E7%B3%BB/"/>
+    <url>/2022/02/20/%E7%90%86%E8%A7%A3%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D%E4%B8%AD%E7%9A%84update%E5%8F%82%E6%95%B0%E9%97%B4%E5%85%B3%E7%B3%BB/</url>
+    
+    <content type="html"><![CDATA[<h3 id="理解梯度下降中的update参数间关系"><a href="#理解梯度下降中的update参数间关系" class="headerlink" title="理解梯度下降中的update参数间关系"></a>理解梯度下降中的update参数间关系</h3><blockquote><p>本文重点在参数间的意义+向量化参数的说明（防止健忘）</p></blockquote><p>根据吴恩达老师授课内容、参考ex1文档说明，在实现梯度下降法时，需要用到三个公式有三：</p><p><img src="/2022/02/20/%E7%90%86%E8%A7%A3%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D%E4%B8%AD%E7%9A%84update%E5%8F%82%E6%95%B0%E9%97%B4%E5%85%B3%E7%B3%BB/image-20220220181105850.png" alt="image-20220220181105850"></p><p><img src="/2022/02/20/%E7%90%86%E8%A7%A3%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D%E4%B8%AD%E7%9A%84update%E5%8F%82%E6%95%B0%E9%97%B4%E5%85%B3%E7%B3%BB/image-20220220181119373.png" alt="image-20220220181119373"></p><p><img src="/2022/02/20/%E7%90%86%E8%A7%A3%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D%E4%B8%AD%E7%9A%84update%E5%8F%82%E6%95%B0%E9%97%B4%E5%85%B3%E7%B3%BB/image-20220220181140486.png" alt="image-20220220181140486"></p><span id="more"></span><ul><li><p>前两个公式求代价函数（不同的参数变量相较于实际函数型关系的差别数值）</p></li><li><p>最后一个实现θ同步更新（或者说梯度下降运算的过程）</p><blockquote><p>里面有两个顺序，分别是i、j：<strong>i意为样本的第几个，j是θ的第几个尝试</strong></p><p>所以i的范围从1到m，j的范围从1到最后一组theta（或者你按照代码习惯，从0开始计数也没毛病）</p></blockquote><p><img src="/2022/02/20/%E7%90%86%E8%A7%A3%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D%E4%B8%AD%E7%9A%84update%E5%8F%82%E6%95%B0%E9%97%B4%E5%85%B3%E7%B3%BB/image-20220226212626191.png" alt="image-20220226212626191"></p></li></ul><p><em><strong>E代表 hθ(x_i)-y_i，E是epoch的缩写</strong></em></p><h4 id="公式内涉及到的变量意义解读"><a href="#公式内涉及到的变量意义解读" class="headerlink" title="公式内涉及到的变量意义解读"></a>公式内涉及到的变量意义解读</h4><ul><li>m训练样本数量</li><li><strong>Cost Function：</strong>J(x) 是代价函数（假设与实际的偏离值构成的函数）</li><li><strong>Hypothesis：</strong>h(x) 是假设函数（我们假定的符合散点图的函数）</li><li><strong>Parameters：</strong>θ_0、θ_1都是模型参数（也就是一个直线函数中的截距、斜率）</li><li><strong>Feature：</strong>xi、yi都是i点对应的数据值</li><li><strong>Learning rate：</strong>α是学习率（每次移动步幅的大小）</li></ul><hr><h4 id="同步更新"><a href="#同步更新" class="headerlink" title="同步更新"></a>同步更新</h4><p>最后一个公式可以写作<em>（里面的 ‘：=’ 代表赋值）</em>：</p><p><img src="/2022/02/20/%E7%90%86%E8%A7%A3%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D%E4%B8%AD%E7%9A%84update%E5%8F%82%E6%95%B0%E9%97%B4%E5%85%B3%E7%B3%BB/image-20220220193216409.png" alt="image-20220220193216409"></p><p>这里的j意味着你在样本列表中迭代的索引（也就是可以在一个范围内进行更新）</p><p>同步更新意义是控制单一变量</p><ul><li>这里右边的J函数意味着求 在参数分别为θ_0和θ_1时的梯度</li><li>减去方向为沿斜坡向上的梯度（乘学习率代表步伐大小），也就是使θ向量往函数值变小的方向前进</li></ul><hr><h4 id="踩坑"><a href="#踩坑" class="headerlink" title="踩坑"></a>踩坑</h4><p>下面都是从大佬们那里学到的代码 -&gt; <a href="https://github.com/tongfeima/MachineLearningAlgorithm/blob/main/GradingDesent/LinearRegressionTest.py">被参考的大佬</a> 、<a href="https://github.com/bisa42/Coursera-ML-AndrewNg-Notes/blob/master/code/ex1-linear%20regression/ML-Exercise1.ipynb">被参考的大佬</a></p><ul><li><p>初始化X矩阵时无法直接将一列1与population合并的问题</p></li><li><p>要注意两个矩阵的维度相同再运算（要分辨ndarray和array）</p></li><li><p>多维矩阵和矩阵实现切片功能所用的函数有差别</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><code class="hljs python">df = pd.read_csv(<span class="hljs-string">&#x27;ex1data1.txt&#x27;</span>, names=[<span class="hljs-string">&#x27;population&#x27;</span>, <span class="hljs-string">&#x27;profit&#x27;</span>])<br><br><span class="hljs-string">&quot;&quot;&quot;一种写法&quot;&quot;&quot;</span><br>data = np.array(df)<br>m = data.shape[<span class="hljs-number">0</span>]<br>theta = np.array([<span class="hljs-number">0</span>,<span class="hljs-number">0</span>])<span class="hljs-comment"># 得到[0 0]，dtype = &#x27;i4&#x27;</span><br><span class="hljs-comment"># theta = np.zeros([1,2])会得到[0. 0.]，dtype = float64</span><br>data = np.hstack([np.ones([m,<span class="hljs-number">1</span>]),data])<br>y = data[:,<span class="hljs-number">2</span>]<br>X = data[:,:<span class="hljs-number">2</span>]<br><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">cost</span>(<span class="hljs-params">X,y,theta</span>):</span><br>    cost = np.<span class="hljs-built_in">sum</span>((X.dot(theta)-y) ** <span class="hljs-number">2</span>)<span class="hljs-comment"># 这里要用dot！！</span><br>    <span class="hljs-keyword">return</span> cost / (<span class="hljs-number">2</span>*m)<br><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">gradient</span>(<span class="hljs-params">X,y,theta</span>):</span><br>    grad = np.empty(<span class="hljs-built_in">len</span>(theta))<span class="hljs-comment"># 初始化梯度</span><br>    <span class="hljs-comment"># 计算梯度中的求和，指的是从头至特定位置的sum</span><br>    inner = X.dot(theta.T) - y<br>    grad = np.<span class="hljs-built_in">sum</span>(inner * X)<br>    <span class="hljs-keyword">return</span> grad / m<br><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">update</span>(<span class="hljs-params">X,y,alpha,theta</span>):</span><br>    <span class="hljs-keyword">while</span> <span class="hljs-literal">True</span>:<br>        last_theta = theta<br>        grad = gradient(X,y,theta)<br>        theta = theta - alpha*grad<br>        <span class="hljs-keyword">if</span> <span class="hljs-built_in">abs</span>(cost(X,y,last_theta) - cost(X,y,theta)) &lt; <span class="hljs-number">1e-15</span>:<br>            <span class="hljs-keyword">break</span><br>    <span class="hljs-keyword">return</span> theta<br><br><br><span class="hljs-string">&quot;&quot;&quot;另一种写法&quot;&quot;&quot;</span><br>ones = pd.DataFrame(&#123;<span class="hljs-string">&#x27;ones&#x27;</span>:np.ones(<span class="hljs-built_in">len</span>(df))&#125;)<span class="hljs-comment"># 在csv里面前面添加一列再提取列中的数据</span><br>data = pd.concat([ones,df],axis=<span class="hljs-number">1</span>)<br>X = data.iloc[:,:-<span class="hljs-number">1</span>].values<span class="hljs-comment"># 这人原本用的.as_matrix()</span><br>y = data.iloc[:,-<span class="hljs-number">1</span>].values<br>theta = np.zeros(X.shape[<span class="hljs-number">1</span>])<br></code></pre></td></tr></table></figure></li><li><p><strong>一些向量化</strong>：其实前面处理数据时，用的就是矩阵（矩阵是多个向量嘛）放到θ更新上，就是理解θ的更新过程 -&gt;<a href="https://blog.csdn.net/lgb_love/article/details/81456955?utm_medium=distribute.pc_aggpage_search_result.none-task-blog-2~aggregatepage~first_rank_ecpm_v1~rank_v31_ecpm-1-81456955.pc_agg_new_rank&utm_term=%E6%A2%AF%E5%BA%A6%E6%9B%B4%E6%96%B0%E7%9A%84%E5%90%91%E9%87%8F%E5%8C%96%E4%BB%A3%E7%A0%81&spm=1000.2123.3001.4430">具体我们又能看一下别人写的</a>来梳理…</p></li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>cv长路</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>linear regression</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>简单的卷积神经网络</title>
+    <link href="/2022/01/27/%E7%AE%80%E5%8D%95%E7%9A%84%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/"/>
+    <url>/2022/01/27/%E7%AE%80%E5%8D%95%E7%9A%84%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/</url>
+    
+    <content type="html"><![CDATA[<h2 id><a href="#" class="headerlink" title></a></h2>]]></content>
+    
+    
+    <categories>
+      
+      <category>CNN</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>神经网络</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>anaconda配置pytorch时遇到的问题</title>
+    <link href="/2022/01/08/anaconda%E9%85%8D%E7%BD%AEpytorch%E6%97%B6%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/"/>
+    <url>/2022/01/08/anaconda%E9%85%8D%E7%BD%AEpytorch%E6%97%B6%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/</url>
+    
+    <content type="html"><![CDATA[<h1 id="win10-anaconda配置pytorch，pycharm使用"><a href="#win10-anaconda配置pytorch，pycharm使用" class="headerlink" title="win10+anaconda配置pytorch，pycharm使用"></a>win10+anaconda配置pytorch，pycharm使用</h1><h4 id="安装好了pytorch后import-torch仍报错"><a href="#安装好了pytorch后import-torch仍报错" class="headerlink" title="安装好了pytorch后import torch仍报错"></a>安装好了pytorch后import torch仍报错</h4><p>其实一般来说这种问题有两种情况，一是版本号不对，二是路径不对</p><p>所以对于我而言，问题在于没有打开虚拟环境下的python，pycharm无法使用也是因为解释器没有选择那个虚拟环境的解释器</p><blockquote><p>虚拟环境相当于一个独立个体，它里面也包括了python等，要是想使用torch，需要在那个环境里面进行使用</p></blockquote><h4 id="创建pytorch虚拟环境"><a href="#创建pytorch虚拟环境" class="headerlink" title="创建pytorch虚拟环境"></a>创建pytorch虚拟环境</h4><p>先用anaconda创建一个pytorch的虚拟环境，可以用图形界面，也可以用命令来创建（如下）：</p><figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">conda</span> create -n pytorch python=<span class="hljs-number">3</span>.<span class="hljs-number">8</span><br></code></pre></td></tr></table></figure><p>版本按需选择</p><p>查看已有的环境</p><figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs nginx"><span class="hljs-attribute">conda</span> <span class="hljs-literal">info</span> --envs<br></code></pre></td></tr></table></figure><p>出现pytorch的列表就行：</p><p><img src="/2022/01/08/anaconda%E9%85%8D%E7%BD%AEpytorch%E6%97%B6%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/image-20220108232758607.png"></p><h4 id="安装pytorch"><a href="#安装pytorch" class="headerlink" title="安装pytorch"></a>安装pytorch</h4><p><a href="https://pytorch.org/get-started/locally/">去官网</a> 按照需求进行筛选后，执行<code>Run this Command</code> 这一栏的命令</p><p>这里我下载的时候很不顺利，可以采取更换镜像源提速保质（直接用官网的下载实在是太容易出错了）</p><p>更换镜像源有两种选择，一种是执行下面的这堆命令</p><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs awk">conda config --add channels https:<span class="hljs-regexp">//mi</span>rrors.tuna.tsinghua.edu.cn<span class="hljs-regexp">/anaconda/</span>cloud<span class="hljs-regexp">/msys2/</span><br>conda config --add channels https:<span class="hljs-regexp">//mi</span>rrors.tuna.tsinghua.edu.cn<span class="hljs-regexp">/anaconda/</span>cloud<span class="hljs-regexp">/conda-forge/</span> <br>conda config --add channels https:<span class="hljs-regexp">//mi</span>rrors.tuna.tsinghua.edu.cn<span class="hljs-regexp">/anaconda/</span>pkgs<span class="hljs-regexp">/free/</span> conda<br>config --add channels https:<span class="hljs-regexp">//mi</span>rrors.tuna.tsinghua.edu.cn<span class="hljs-regexp">/anaconda/</span>cloud<span class="hljs-regexp">/pytorch/</span> conda <br>config --set show_channel_urls yes<br></code></pre></td></tr></table></figure><p>一种是更改anaconda下的<code>.condarc</code>文件【不推荐对anaconda文件夹中内容不熟悉的兄弟们采用这种方式，虽然看起来简便】</p><p><em>这一步如果东西没下载完全，就多执行几次，我前几次没装上，后来一次没装全，差啥补啥，比如我最后就差个pillow，<code>pip install pillow</code>（或者用 conda 装）或者选择再执行一次安装命令</em></p>]]></content>
+    
+    
+    <categories>
+      
+      <category>报错</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>报错</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>卷积神经网络的认识</title>
+    <link href="/2022/01/05/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E7%9A%84%E8%AE%A4%E8%AF%86/"/>
+    <url>/2022/01/05/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E7%9A%84%E8%AE%A4%E8%AF%86/</url>
+    
+    <content type="html"><![CDATA[<h2 id="卷积和神经网络概述（CNN）"><a href="#卷积和神经网络概述（CNN）" class="headerlink" title="卷积和神经网络概述（CNN）"></a>卷积和神经网络概述（CNN）</h2><blockquote><p>笔者也是刚接触神经网络，这篇文章仅为简单梳理各名称之间的关系，如果写的哪里有问题欢迎通过邮件指出</p></blockquote><h3 id="卷积神经网络的结构"><a href="#卷积神经网络的结构" class="headerlink" title="卷积神经网络的结构"></a>卷积神经网络的结构</h3><ol><li>输入层</li><li>卷积层</li><li>池化层</li><li>全连接层</li><li>输出层</li></ol><span id="more"></span><p>不过通常卷积层和池化层会重复几遍提高识别的精确度，比如输入层-卷积层-池化层-卷积层-池化层-全连接层-全连接层-分类器</p><p>大概流程为由卷积层使用过滤器进行特征的提取<em>（<strong>过滤器为从上一层矩阵进行定量数据处理的移动模块，将一张图片全部处理完后，得到长宽更小，高度更高的图片</strong>）</em>，池化层为了降低信息损失，会避免卷积过程中长宽的压缩，得到边缘特征，传入全连接层进行信息比对从而分类</p><p>卷积处理图片的过程如下|&gt;从左到右</p><p><img src="/2022/01/05/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E7%9A%84%E8%AE%A4%E8%AF%86/image-20220105223627106.png" alt="image-20220105223627106"></p><p>（图片的高度即RGB通道的数量，比如一张图片上拥有RGB三种颜色，它的高就为3）</p><h3 id="卷积层"><a href="#卷积层" class="headerlink" title="卷积层"></a>卷积层</h3><blockquote><p>简单理解：卷积层是突出主要特征，弱化边缘影响</p></blockquote><h4 id="卷积是什么"><a href="#卷积是什么" class="headerlink" title="卷积是什么"></a>卷积是什么</h4><p>它可以具化为一个公式（连续）：</p><p><img src="/2022/01/05/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E7%9A%84%E8%AE%A4%E8%AF%86/image-20220105203821926.png" alt="image-20220105203821926"></p><p>离散的公式如下：</p><p><img src="/2022/01/05/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E7%9A%84%E8%AE%A4%E8%AF%86/image-20220105204947513.png" alt="image-20220105204947513"></p><p>实际上，这两个公式都代表着<strong>一个将 f(x) 函数反转后穿过 g(x) 函数所在定义域的过程中，两者重叠的面积</strong></p><p>从连续的两个函数入手，我们打个比方，g(x) 是个火车，f(x) 是个山洞，它们并列在x轴方向上（或者说他们定义域相同，且头并头、尾并尾），这时你想要让火车穿过这个山洞，就需要调转火车头并让火车驶入山洞，那么，g(x) 翻转即为 g(-x)，我们想要研究<em>“随时间变化，火车与山洞的位置关系”</em>，就要添入时间变量，从而使 g(-x) 变为 g(t-x) ；积分则代表无数个瞬间状态求和</p><p>切换到离散函数上，其实是一样的——我们把离散函数当作相对另一个函数而运动的样本点</p><p>经过这样的运算，我们可以将两个函数的动态比对结果转化为直观的数据</p><p>要是扔到物理上面，通过卷积定理，我们可以解决信号转换的难题</p><p><em>需要注意的是，卷积的时候，运动的函数带动了两个量的变化，一是重叠的区间，二是重叠的面积</em></p><p>上面我们提到的卷积，可以说是仍在数学领域的理解；若要将卷积应用到神经网络，则是另一种近似的体现</p><p>CNN实现卷积过程就在特征过滤器（或者说是过滤器、内核——它的类型有很多，按需选择）中，它由比原有的图像矩阵小得多的矩阵组成，这个内核会在输入的图像矩阵中进行移动、计算（取两个矩阵的点积），最终它将得到原始图像的特征图</p><p><strong>特征图突出显示原始图像的各种边缘</strong>，比如PS使用一种内核进行模糊处理</p><p>简单提过滤算法，就像垂直滤波器是通过某一像素块与旁边像素块明度差的绝对值大小进行判断的，我们可以通过对比，明白一个红色的苹果在绿色背景下格外显眼，因为像素的明度差别比较大</p><p>显示边缘可以让机器识别图像的纹理，比如一个简单的圆圈⭕、水平线、垂直线、角（里面也会应用一些函数，比如经典ReLU）</p><h4 id="卷积层包括什么"><a href="#卷积层包括什么" class="headerlink" title="卷积层包括什么"></a>卷积层包括什么</h4><p><strong>卷积层由多个卷积核组成，一个核对应一个map，每个map拥有多个神经元</strong>（也就是一个卷积层中，我们通过几个不同类型的内核过滤出具有不同特征的特征图，每个核过滤的所有特征图组为map；神经元则是图像矩阵中一个个像素块对应的小矩阵）</p><blockquote><p>上面提到了卷积神经网络的一大特性，局部对应；最初的神经网络复杂在，某一层的<strong>单个</strong>神经元连接了上一层<strong>所有</strong>的神经元，而卷积则是<strong>一个</strong>神经元与上一层<strong>局部</strong>的神经元相对应</p><p>也就是卷积将对上一张图每个像素块的处理简化为对上一张图一小部分内的像素块进行处理<em>（一个像素块在计算机中的储存形式为 RGB通道数据值的矩阵，如果对一张图上的所有像素块都进行处理，运算量的庞大可想而知）</em></p></blockquote><p>每一个内核都会处理三个频道的图像（像纯色的图像有纯色图像的独特内核进行处理），所以数据量仍很大，但是将一些非线性函数应用到特征上面时（ReLU什么的），仅需要研究亮度这一个频道</p><h3 id="池化层"><a href="#池化层" class="headerlink" title="池化层"></a>池化层</h3><blockquote><p>对来自卷积层的特征图进行挑选，舍弃非必要内容，提取重点内容（减小过拟合率，也能加快后续的处理）</p><p>也就是这种处理，可以提取出底层对象（这就简化了很多问题，放到手写数字识别上，想要分辨一个数字是否是8，我们只需要找到两个上下分布的圆）</p></blockquote><p>池化层对特征图的提取有两种，一种是过滤最大值的内核，一种是求取平均值的内核</p><h3 id="全连接层"><a href="#全连接层" class="headerlink" title="全连接层"></a>全连接层</h3><blockquote><p>（类似于前馈神经）将最后滤出的特征图进行分类</p></blockquote><p>全连接层有储存所有结果可能的节点，每个节点与可以激活它的神经元相连，并且右边的层受相邻左边层的影响，所有影响会得到最后结果</p><p><img src="/2022/01/05/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E7%9A%84%E8%AE%A4%E8%AF%86/image-20220107182918566.png" alt="image-20220107182918566"></p><h3 id="奇怪的名词"><a href="#奇怪的名词" class="headerlink" title="奇怪的名词"></a>奇怪的名词</h3><h5 id="权重"><a href="#权重" class="headerlink" title="权重"></a>权重</h5><p>类比数学求取加权平均值中的权，权重指的就是神经元在计算影响因素的数据时，每个影响因素对最终结果的影响程度</p><p><em>未完待续…</em></p>]]></content>
+    
+    
+    <categories>
+      
+      <category>神经网络</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>CNN</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>搭建hexo+github博客</title>
+    <link href="/2021/12/18/%E6%90%AD%E5%BB%BAhexo-github%E5%8D%9A%E5%AE%A2/"/>
+    <url>/2021/12/18/%E6%90%AD%E5%BB%BAhexo-github%E5%8D%9A%E5%AE%A2/</url>
+    
+    <content type="html"><![CDATA[<h3 id="搭建hexo-github博客"><a href="#搭建hexo-github博客" class="headerlink" title="搭建hexo+github博客"></a>搭建hexo+github博客</h3><blockquote><ol><li>使用hexo环境准备：node和git</li><li>配置GitHub并安装hexo [两者不分先后]</li><li>写一篇博客并上传</li><li>之前遇到的问题汇总[根据实际情况进行更新]</li></ol></blockquote><span id="more"></span><h3 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h3><p>鉴于我本人只是个小白，写博客是用来记录自己这来之不易的成果、整理自己学到的东西，同时方便我后续再次搭建，希望看的人也能有所收获。如有问题，欢迎指正！OvO</p><h3 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h3><h4 id="node安装"><a href="#node安装" class="headerlink" title="node安装"></a>node安装</h4><p><a href="https://nodejs.org/en/download/">Node.js官网下载</a>，可以按照你的实际需求进行选择，这里推荐下载LTS版本，current版本可能无法安装一些插件</p><p><em>安装时可以选择傻瓜式安装，一直默认下一步（大概是倒数第二步有一个“添加到环境路径”的选项，可以选择|有的人出现的报错可能是因为环境变量没有处理对，所以这里直接勾选它可能会省去一些麻烦）</em></p><p>安装完后，<code>win+R</code>，敲入<code>cmd</code>打开命令行，分别输入<code>node  -v</code>和<code>npm -v</code>进行检查，如果成功，会显示版本号。大概是图片里的那样：</p><p><img src="/2021/12/18/%E6%90%AD%E5%BB%BAhexo-github%E5%8D%9A%E5%AE%A2/version.png"></p><p><em>npm是<strong>包管理器</strong>，我们可以通过它来安装一些插件什么的</em></p><h5 id="添加镜像"><a href="#添加镜像" class="headerlink" title="添加镜像"></a>添加镜像</h5><p>没有梯子的话，加载速度较慢，我们可以在命令行中敲下</p><figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs arduino">npm config set registry https:<span class="hljs-comment">//registry.npm.taobao.org</span><br></code></pre></td></tr></table></figure><p>设置成淘宝的镜像源</p><h4 id="git安装"><a href="#git安装" class="headerlink" title="git安装"></a>git安装</h4><blockquote><p>它是一个控制工具，能将本地网页文件上传到GitHub</p><p>你如果对它各种操作细节感兴趣，能在廖雪峰老师的网站中，找到相关教程：<a href="https://www.liaoxuefeng.com/wiki/896043488029600">廖老师的git教程</a></p></blockquote><p>我们从<a href="https://git-scm.com/download/win">git官网</a>按需下载git，完成后，还是那一套：<code>win+R</code>，敲入<code>cmd</code>，回车（打开命令行），通过<code>git version</code>进行检查，出现版本号代表我们安装成功</p><p><img src="/2021/12/18/%E6%90%AD%E5%BB%BAhexo-github%E5%8D%9A%E5%AE%A2/git.png"></p><h3 id="配置GitHub"><a href="#配置GitHub" class="headerlink" title="配置GitHub"></a>配置GitHub</h3><blockquote><p>如果没有GitHub账号，就注册一个<em>（你注册用的账户名后面会用到，推荐慎重考虑）</em></p></blockquote><h4 id="准备一个仓库"><a href="#准备一个仓库" class="headerlink" title="准备一个仓库"></a>准备一个仓库</h4><p>新建一个仓库（在右上角的个人账号旁边，有个加号）</p><p><img src="/2021/12/18/%E6%90%AD%E5%BB%BAhexo-github%E5%8D%9A%E5%AE%A2/version.png"></p><p>由此我们将会加载出下面这个页面：</p><p><img src="/2021/12/18/%E6%90%AD%E5%BB%BAhexo-github%E5%8D%9A%E5%AE%A2/%E4%BB%93%E5%BA%93.png"></p><ol><li>为仓库命名，命名格式为：用户名.github.io（<strong>注意，用户名就是你账户的注册名，必须相同</strong>），比如我的注册名为Biersaa，那么我的仓库名应为<code>Biersaa.github.io</code></li><li>勾选public（使我们的博客能被其他人看见）</li><li>最好勾选<code>Add a README file</code>，一是不同意在后续操作报错，二是我们直接创建了一个<code>README</code>文件，可以写上对仓库的描述给自己和浏览你仓库的人予以相关提示（它使用markdown语法）</li><li>创建仓库</li></ol><h4 id="生成ssh-key"><a href="#生成ssh-key" class="headerlink" title="生成ssh key"></a>生成ssh key</h4><blockquote><p>ssh key指一种密钥，方便在你向仓库中提交代码、文件时判断提交的那台计算机是否属于账号本人的</p></blockquote><p>打开命令行（相信这个操作你已经很熟练了：<code>win+R</code>,<code>cmd</code>），敲入</p><figure class="highlight excel"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs excel">ssh-keygen -<span class="hljs-built_in">t</span> rsa -C <span class="hljs-string">&quot; &quot;</span><br></code></pre></td></tr></table></figure><p><em>双引号内写上你的邮箱</em></p><p>然后会在c盘中，你的用户账号下生成一个.ssh文件夹，请找到名为<code>id_rsa.pub</code>的文件，复制里面的所有内容，我们下面要用到</p><p>回到GitHub，还是在右上角，我们进入个人账户的设置</p><p><img src="/2021/12/18/%E6%90%AD%E5%BB%BAhexo-github%E5%8D%9A%E5%AE%A2/%E8%AE%BE%E7%BD%AE.png"></p><p>在设置中找到管理ssh的页面（在settings中找到下面图片上的那个按键并点开）</p><p><img src="/2021/12/18/%E6%90%AD%E5%BB%BAhexo-github%E5%8D%9A%E5%AE%A2/%E6%89%93%E5%BC%80.png"></p><p>创建一个ssh密钥</p><p><img src="/2021/12/18/%E6%90%AD%E5%BB%BAhexo-github%E5%8D%9A%E5%AE%A2/%E5%88%9B%E5%BB%BA.png"></p><p><img src="/2021/12/18/%E6%90%AD%E5%BB%BAhexo-github%E5%8D%9A%E5%AE%A2/%E6%96%B0%E5%AF%86%E9%92%A5.png" alt="出现页面"></p><p>Title随便命名，你看着习惯就行；将我们刚刚从<code>id_rsa.pub</code>中复制的内容贴到Key里面，然后<code>Add SSH key</code>（添加一个新密钥）</p><h4 id="安装Hexo"><a href="#安装Hexo" class="headerlink" title="安装Hexo"></a>安装Hexo</h4><p>在命令行中敲（全局安装hexo）</p><figure class="highlight avrasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs avrasm">npm install -g hexo-<span class="hljs-keyword">cli</span><br></code></pre></td></tr></table></figure><ul><li>安装完后还是老一套，可以用<code>hexo version</code>来检查是否安装成功<em>（出现版本号即为成功）</em></li></ul><p>我们准备一个文件夹，在文件夹中右键，点击出现的<code>git bash here</code></p><p><img src="/2021/12/18/%E6%90%AD%E5%BB%BAhexo-github%E5%8D%9A%E5%AE%A2/image-20211218210426001(1).png"></p><p>在出现的窗口中敲下</p><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs csharp">hexo <span class="hljs-keyword">init</span> blog<br></code></pre></td></tr></table></figure><p><em>你或许想把这里的 blog换成你喜欢的名字，请随意</em></p><p>这代表着新建一个名叫blog的文件夹并用hexo初始化它（hexo会在里面直接生成一些你的博客需要用到的文件）</p><p>接下来在里面敲<code>npm install hexo-deployer-git --save</code>，安装部署插件（使你之后编写的博文能够上传）</p><p>分别敲下<code>git config --global user.name &quot;小明&quot;</code>和<code>git config --global user.email &quot;123@bala.com&quot;</code>，用于GitHub判断进行上传操作的是不是你本人（这里的小明是你的用户名，<a href="mailto:&#x31;&#50;&#51;&#64;&#98;&#97;&#108;&#x61;&#46;&#x63;&#111;&#x6d;">&#x31;&#50;&#51;&#64;&#98;&#97;&#108;&#x61;&#46;&#x63;&#111;&#x6d;</a>是你的邮箱；它们可以不是github的用户名和邮箱）</p><blockquote><p>这里我曾采用过另一种方式，你如果好奇可以通过搜索引擎了解（不过我觉得没有这种好用）</p></blockquote><p>我们现在可以通过git bash，敲入<code>hexo s</code>在本地进行预览</p><p><img src="/2021/12/18/%E6%90%AD%E5%BB%BAhexo-github%E5%8D%9A%E5%AE%A2/%E9%A2%84%E8%A7%88.png"></p><p>在浏览器上访问<a href="http://localhost:4000/">http://localhost:4000</a> ，就能看到生成的博客页面，在git bash中按<code>ctrl+C</code>则停止服务</p><blockquote><p>以后我们对配置进行修改之前可以优先<code>hexo s</code>，避免将崩坏的页面上传</p></blockquote><p>我们从博客文件夹的根目录下，右键打开git bash，依次执行下面三行命令（分别代表：清除缓存、生成页面、上传页面）</p><figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs ebnf"><span class="hljs-attribute">hexo clean</span><br><span class="hljs-attribute">hexo g</span><br><span class="hljs-attribute">hexo d</span><br></code></pre></td></tr></table></figure><p>之后别人就可以直接从<code>https://用户名.github.io</code>访问到你的博客了，比如，你可以通过在浏览器中键入<a href="https://biersaa.github.io/">https://biersaa.github.io/</a> 来访问我的博客（我的博客对应的GitHub仓库名字其实为Biersaa，但链接就直接将大写转小写了）</p><h3 id="写一篇自己的博客"><a href="#写一篇自己的博客" class="headerlink" title="写一篇自己的博客"></a>写一篇自己的博客</h3><blockquote><p>这部分你可以从<a href="https://hexo.io/zh-cn/docs/writing">官方文档</a>上详细了解</p></blockquote><p>在git bash中敲<code>hexo n &quot;文章的标题&quot;</code>，就能新建一篇文章（符合markdown语法）</p><p>接下来</p><figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs ebnf"><span class="hljs-attribute">hexo clean</span><br><span class="hljs-attribute">hexo g</span><br><span class="hljs-attribute">hexo d</span><br></code></pre></td></tr></table></figure><p>即可使这篇文章上传到你的博客</p><h3 id="我遇到的问题"><a href="#我遇到的问题" class="headerlink" title="我遇到的问题"></a>我遇到的问题</h3><blockquote><p>我第一遍搭的时候真的报错报到怀疑人生，做梦都是满满的报错飞到我脸上（太离谱了），可惜我没有进行记录</p></blockquote><h5 id="已经有了一个hexo博客想要于同一台电脑上再搭第二个？"><a href="#已经有了一个hexo博客想要于同一台电脑上再搭第二个？" class="headerlink" title="已经有了一个hexo博客想要于同一台电脑上再搭第二个？"></a>已经有了一个hexo博客想要于同一台电脑上再搭第二个？</h5><p><a href="https://blog.csdn.net/qq_36759224/article/details/86546729">推荐链接</a></p>]]></content>
+    
+    
+    <categories>
+      
+      <category>杂七杂八</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>博客</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  
+</search>
